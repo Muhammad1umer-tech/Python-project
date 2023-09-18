@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
+import joblib
 import notebook
+
 app = Flask(__name__)
 
 CORS(app, origins="*")
@@ -26,6 +28,19 @@ def api_my_function():
     except Exception as e:
         error_message = str(e)
         return jsonify({'error': error_message}), 500 
+    
+
+
+@app.route('/post', methods=['POST'])
+def index():
+    request_data = request.get_json()
+    loaded_model = joblib.load('l_model.pkl')
+    data = {key: value for key, value in request_data.items()}
+    data_dict = {key: value[0] for key, value in data.items()}
+    data_list = list(data_dict.values())
+    data_array = np.array([data_list])
+    pre = loaded_model.predict(data_array)
+    return f'{pre[0]}'
 
 if __name__ == '__main__':
     app.run(debug=True)
