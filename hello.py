@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS 
 import joblib
 import notebook
+import numpy as np
 
 app = Flask(__name__)
 
